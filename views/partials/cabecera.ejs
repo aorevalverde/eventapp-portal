@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= titulo %> · EventApp</title>
+<link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+<div class="app">
+    <aside class="lateral">
+        <div class="marca"><span class="punto"></span>EventApp</div>
+        <nav>
+            <% [['dashboard','Panel'],['usuarios','Usuarios'],['eventos','Eventos'],['entradas','Entradas'],['reportes','Reportes']].forEach(function(m){ %>
+                <a href="/<%= m[0] %>" class="<%= m[0] === activa ? 'activo' : '' %>"><%= m[1] %></a>
+            <% }) %>
+        </nav>
+        <div class="pie-lateral">
+            <span><%= admin.nombre %></span>
+            <a href="/salir">Cerrar sesión</a>
+        </div>
+    </aside>
+    <main class="contenido">
+        <h1><%= titulo %></h1>
+        <% if (aviso) { %><div class="aviso <%= aviso[0] %>"><%= aviso[1] %></div><% } %>

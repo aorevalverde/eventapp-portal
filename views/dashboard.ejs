@@ -1,0 +1,36 @@
+<%- include('partials/cabecera') %>
+<div class="cifras">
+    <% Object.keys(cifras).forEach(function(k){ %>
+        <div class="cifra"><b><%= cifras[k] %></b><span><%= k %></span></div>
+    <% }) %>
+</div>
+<div class="dos">
+    <div class="tarjeta">
+        <h2>Últimos eventos</h2>
+        <% if (!eventos.length) { %><div class="vacio">Aún no hay eventos.</div><% } else { %>
+        <table>
+            <% eventos.forEach(function(e){ %>
+                <tr>
+                    <td><a href="/eventos/<%= e.id %>/editar"><%= e.titulo %></a><br>
+                        <small style="color:var(--suave)"><%= e.organizador %> · <%= fechaLima(e.fecha_hora) %></small></td>
+                    <td style="text-align:right"><%- formatear(e.estado, {tipo:'estado'}) %></td>
+                </tr>
+            <% }) %>
+        </table>
+        <% } %>
+    </div>
+    <div class="tarjeta">
+        <h2>Reportes por revisar</h2>
+        <% if (!reportes.length) { %><div class="vacio">No hay reportes pendientes.</div><% } else { %>
+        <table>
+            <% reportes.forEach(function(r){ %>
+                <tr>
+                    <td><%= r.titulo %><br><small style="color:var(--suave)"><%= r.motivo %></small></td>
+                    <td style="text-align:right"><a class="btn chico claro" href="/reportes">Revisar</a></td>
+                </tr>
+            <% }) %>
+        </table>
+        <% } %>
+    </div>
+</div>
+<%- include('partials/pie') %>

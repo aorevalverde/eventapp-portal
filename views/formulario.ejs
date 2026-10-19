@@ -1,0 +1,47 @@
+<%- include('partials/cabecera') %>
+<div class="tarjeta formulario">
+<form method="post" action="/<%= cfg.ruta %>/guardar">
+    <% if (actual) { %><input type="hidden" name="id" value="<%= actual.id %>"><% } %>
+    <% cfg.campos.forEach(function(c){
+        if (actual && c.solo_crear) return;
+        var n = c.nombre;
+        var valor = actual ? actual[n] : (c.defecto !== undefined ? c.defecto : '');
+        if (valor === null || valor === undefined) valor = '';
+        var req = c.requerido ? ' required' : '';
+    %>
+    <div class="campo<%= c.tipo === 'check' ? ' check' : '' %>">
+        <% if (c.tipo === 'check') { %>
+            <label><input type="checkbox" name="<%= n %>"<%= valor ? ' checked' : '' %>> <%= c.etiqueta %></label>
+        <% } else { %>
+            <label for="<%= n %>"><%= c.etiqueta %></label>
+        <% } %>
+        <% if (c.tipo === 'textarea') { %>
+            <textarea id="<%= n %>" name="<%= n %>"<%= req %>><%= valor %></textarea>
+        <% } else if (c.tipo === 'select' || c.tipo === 'fk') {
+             var ops = c.tipo === 'fk' ? opciones[n] : c.opciones; %>
+            <select id="<%= n %>" name="<%= n %>"<%= req %>>
+                <% if (c.tipo === 'fk' || !c.requerido) { %><option value="">Seleccione...</option><% } %>
+                <% Object.keys(ops).forEach(function(k){ %>
+                    <option value="<%= k %>"<%= String(k) === String(valor) ? ' selected' : '' %>><%= ops[k] %></option>
+                <% }) %>
+            </select>
+        <% } else if (c.tipo === 'datetime') { %>
+            <input type="datetime-local" id="<%= n %>" name="<%= n %>" value="<%= valor ? inputLima(valor) : '' %>"<%= req %>>
+        <% } else if (c.tipo === 'password') { %>
+            <input type="password" id="<%= n %>" name="<%= n %>" autocomplete="new-password"<%= actual ? '' : ' required' %>>
+            <% if (actual) { %><small>Déjalo vacío para mantener la actual.</small><% } %>
+        <% } else if (c.tipo !== 'check') { %>
+            <input type="<%= c.tipo === 'email' ? 'email' : (c.tipo === 'number' || c.tipo === 'decimal') ? 'number' : 'text' %>"
+                   id="<%= n %>" name="<%= n %>" value="<%= valor %>"
+                   <% if (c.tipo === 'decimal') { %>step="0.01" min="0"<% } else if (c.tipo === 'number') { %>min="<%= c.min || 0 %>"<% } %><%= req %>>
+        <% } %>
+        <% if (c.ayuda) { %><small><%= c.ayuda %></small><% } %>
+    </div>
+    <% }) %>
+    <div class="botones">
+        <button class="btn" type="submit">Guardar</button>
+        <a class="btn claro" href="/<%= cfg.ruta %>">Cancelar</a>
+    </div>
+</form>
+</div>
+<%- include('partials/pie') %>

@@ -1,0 +1,19 @@
+{
+  "name": "eventapp-portal",
+  "version": "1.0.0",
+  "description": "Portal administrativo y servicios REST de EventApp",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.24.6"
+  }
+}

@@ -1,0 +1,46 @@
+<%- include('partials/cabecera') %>
+<div class="barra">
+    <form method="get">
+        <input type="text" name="q" value="<%= q %>" placeholder="Buscar...">
+        <button class="btn claro" type="submit">Buscar</button>
+    </form>
+    <a class="btn" href="/<%= cfg.ruta %>/nuevo">+ Nuevo</a>
+</div>
+<div class="tabla-caja">
+<% if (!filas.length) { %>
+    <div class="vacio">No hay registros<%= q ? ' para esa búsqueda' : '' %>.</div>
+<% } else { %>
+<table>
+    <thead><tr>
+        <% Object.keys(cfg.columnas).forEach(function(k){ %><th><%= cfg.columnas[k].titulo %></th><% }) %>
+        <th></th>
+    </tr></thead>
+    <tbody>
+    <% filas.forEach(function(f){ %>
+        <tr>
+            <% Object.keys(cfg.columnas).forEach(function(k){ %><td><%- formatear(f[k], cfg.columnas[k]) %></td><% }) %>
+            <td class="acciones">
+                <% Object.keys(cfg.acciones || {}).forEach(function(nombre){ var a = cfg.acciones[nombre]; if (a.si && !a.si(f)) return; %>
+                    <form method="post" action="/<%= cfg.ruta %>/<%= f.id %>/accion/<%= nombre %>"<% if (a.confirmar) { %> data-confirmar="<%= a.confirmar %>"<% } %>>
+                        <button class="btn chico <%= a.clase %>" type="submit"><%= typeof a.etiqueta === 'function' ? a.etiqueta(f) : a.etiqueta %></button>
+                    </form>
+                <% }) %>
+                <a class="btn chico claro" href="/<%= cfg.ruta %>/<%= f.id %>/editar">Editar</a>
+                <form method="post" action="/<%= cfg.ruta %>/<%= f.id %>/eliminar" data-confirmar="<%= cfg.avisoEliminar || '¿Eliminar este registro?' %>">
+                    <button class="btn chico rojo" type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+    <% }) %>
+    </tbody>
+</table>
+<% } %>
+</div>
+<% if (paginas > 1) { %>
+    <div class="paginas">
+        <% for (var i = 1; i <= paginas; i++) { %>
+            <% if (i === pagina) { %><span><%= i %></span><% } else { %><a href="/<%= cfg.ruta %>?p=<%= i %>&q=<%= encodeURIComponent(q) %>"><%= i %></a><% } %>
+        <% } %>
+    </div>
+<% } %>
+<%- include('partials/pie') %>
